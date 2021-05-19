@@ -44,13 +44,15 @@ def parse_dns(file)
   file.each do |line|
     splittedLine = line.strip.split(", ")
 
-    # create a new hash when the value does not exist in the 'records' hash
-    source = {} if not records.keys.include? splittedLine.first
+    if splittedLine.first == "A" or splittedLine.first == "CNAME"
+      # create a new hash when the value does not exist in the 'records' hash
+      source = {} if not records.keys.include? splittedLine.first
 
-    # store destination into 'source' hash
-    source[splittedLine[1]] = splittedLine.last
-    # store 'source' hash into 'records' hash
-    records[splittedLine.first] = source
+      # store destination into 'source' hash
+      source[splittedLine[1]] = splittedLine.last
+      # store 'source' hash into 'records' hash
+      records[splittedLine.first] = source
+    end
   end
   records
 end
