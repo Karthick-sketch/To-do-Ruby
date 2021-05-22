@@ -1,26 +1,28 @@
 require "date"
 
 class Todo
-  def initialize(event, date, is_completed)
+  def initialize(event, date, done)
     @event = event
     @date = date
-    @is_completed = is_completed
+    @done = done
   end
 
   def overdue?
-    @date < Date.today
+    @date < Date.today # check the to-do is overdue or not
   end
 
   def due_today?
-    @date == Date.today
+    @date == Date.today # check the to-do is today or not
   end
 
   def due_later?
-    @date > Date.today
+    @date > Date.today # check the to-do is later day or not
   end
 
   def to_displayable_string
-    "[#{@is_completed ? "X" : " "}] #{@event} #{@date if @date != Date.today}"
+    # In the string, if `@done` is true then add `X`
+    # if `@date` is today it won't add `@date` and remove the last space using strip
+    "[#{@done ? "X" : " "}] #{@event} #{@date if @date != Date.today}".strip
   end
 end
 
@@ -46,6 +48,7 @@ class TodosList
   end
 
   def to_displayable_list
+    # to convert the array into a multi-line string.
     @todos.map { |todo| todo.to_displayable_string }.join("\n")
   end
 end
