@@ -23,7 +23,7 @@ class Todo
     # add `[X]` if the todo is completed
     display_status = @completed ? "[X]" : "[ ]"
     # add `@due_date` if the todo date is not today
-    display_date = @due_date != Date.today ? @due_date : ""
+    display_date = !due_today? ? @due_date : ""
     "#{display_status} #{@text} #{display_date}"
   end
 end
