@@ -1,28 +1,30 @@
 require "date"
 
 class Todo
-  def initialize(event, date, done)
-    @event = event
-    @date = date
-    @done = done
+  def initialize(text, date, completed)
+    @text = text
+    @due_date = date
+    @completed = completed
   end
 
   def overdue?
-    @date < Date.today # check the to-do is overdue or not
+    @due_date < Date.today # check the to-do is overdue or not
   end
 
   def due_today?
-    @date == Date.today # check the to-do is today or not
+    @due_date == Date.today # check the to-do is today or not
   end
 
   def due_later?
-    @date > Date.today # check the to-do is later day or not
+    @due_date > Date.today # check the to-do is later day or not
   end
 
   def to_displayable_string
-    # In the string, if `@done` is true then add `X`
-    # if `@date` is today it won't add `@date` and remove the last space using strip
-    "[#{@done ? "X" : " "}] #{@event} #{@date if @date != Date.today}".strip
+    # add `[X]` if the todo is completed
+    display_status = @completed ? "[X]" : "[ ]"
+    # add `@due_date` if the todo date is not today
+    display_date = @due_date != Date.today ? @due_date : ""
+    "#{display_status} #{@text} #{display_date}"
   end
 end
 
