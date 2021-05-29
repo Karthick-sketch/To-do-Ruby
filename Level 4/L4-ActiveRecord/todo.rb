@@ -2,31 +2,23 @@ require "active_record"
 
 # todo.rb
 class Todo < ActiveRecord::Base
-  def overdue?
-    due_date < Date.today
-  end
-
   def due_today?
     due_date == Date.today
   end
 
-  def due_later?
-    due_date > Date.today
-  end
-
   def self.overdue
-    # Filter to-dos that are overdue
-    all.filter { |todo| todo.overdue? }
+    # get to-dos from database that are overdue
+    where("due_date < ?", Date.today)
   end
 
   def self.due_today
-    # Filter to-dos that are due today
-    all.filter { |todo| todo.due_today? }
+    # get to-dos from database that are due today
+    where("due_date = ?", Date.today)
   end
 
   def self.due_later
-    # Filter to-dos that are due later
-    all.filter { |todo| todo.due_later? }
+    # get to-dos from database that are due later
+    where("due_date > ?", Date.today)
   end
 
   def to_displayable_string
@@ -35,16 +27,25 @@ class Todo < ActiveRecord::Base
     "#{id}. #{display_status} #{todo_text} #{display_date}"
   end
 
-  def self.to_displayable_list(todos)
-    todos.map { |todo| todo.to_displayable_string }.join("\n")
+  def self.to_displayable_list
+    all.map { |todo| todo.to_displayable_string }.join("\n")
   end
 
   def self.show_list
     # print the list of todos
-    puts ["My Todo-list",
-          "Overdue\n" + to_displayable_list(overdue),
-          "Due Today\n" + to_displayable_list(due_today),
-          "Due Later\n" + to_displayable_list(due_later)].join("\n\n\n")
+    puts "My Todo-list\n\n"
+
+    puts "Overdue\n"
+    puts overdue.to_displayable_list
+    puts "\n\n"
+
+    puts "Due Today\n"
+    puts due_today.to_displayable_list
+    puts "\n\n"
+
+    puts "Due Later\n"
+    puts due_later.to_displayable_list
+    puts "\n\n"
   end
 
   def self.add_task(hash)
